@@ -8,7 +8,7 @@ const Navbar = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const hideProfileRoutes = ["/", "/login", "/signup"];
+  const hideProfileRoutes = ["/", "/login", "/signup", "/auth"];
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [taskListOpen, setTaskListOpen] = useState(false);
@@ -122,7 +122,7 @@ const Navbar = () => {
         <ul className="text-gray-300 flex items-center space-x-4">
           <li>
             <Link
-              to={profile.role === "admin" ? "/admin/profile" : "/user/profile"}
+              to="/auth"
               className="block px-4 py-2 hover:text-white transition"
               onClick={() => setDropdownOpen(false)}
             >
