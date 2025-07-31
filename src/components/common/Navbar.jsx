@@ -119,6 +119,18 @@ const Navbar = () => {
           </div>
         )}
 
+        <ul className="text-gray-300 flex items-center space-x-4">
+          <li>
+            <Link
+              to={profile.role === "admin" ? "/admin/profile" : "/user/profile"}
+              className="block px-4 py-2 hover:text-white transition"
+              onClick={() => setDropdownOpen(false)}
+            >
+              Login/Signup
+            </Link>
+          </li>
+        </ul>
+
         {/* Profile Button (Hidden on Landing/Login/Signup) */}
         {!hideProfileRoutes.includes(location.pathname) && (
           <div className="relative" ref={dropdownRef}>

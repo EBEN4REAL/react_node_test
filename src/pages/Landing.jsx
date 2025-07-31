@@ -59,7 +59,7 @@ const Landing = () => {
       </div>
 
       {/* Role Selection Section */}
-      <div className="py-16 max-w-7xl mx-auto px-6">
+      {/* <div className="py-16 max-w-7xl mx-auto px-6">
         <h2 className="text-4xl font-bold text-center mb-6 text-gray-800">Choose Your Role</h2>
         <div className="mt-8 grid gap-8 sm:grid-cols-2 max-w-4xl mx-auto">
           {["user", "admin"].map((role) => (
@@ -91,7 +91,7 @@ const Landing = () => {
             </motion.div>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* Features Section */}
       <div className="py-16 bg-gray-100">
