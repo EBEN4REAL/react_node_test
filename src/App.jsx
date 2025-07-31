@@ -19,6 +19,7 @@ import Footer from "./components/common/Footer";
 
 // Public Pages
 import Landing from "./pages/Landing";
+import Auth from "./pages/AuthPages/Auth";
 import Login from "./components/auth/Login";
 import Signup from "./components/auth/Signup";
 import ForgotPassword from "./components/auth/ForgotPassword";
@@ -106,6 +107,7 @@ function App() {
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/auth" element={<Auth />} />
                 
                 {/* Protected Admin Routes */}
                 <Route 
