@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
-function Login() {
+function Auth() {
     const navigate = useNavigate();
     return (
         <div className="py-16 max-w-7xl mx-auto px-6">
@@ -40,4 +41,4 @@ function Login() {
     );
 }
 
-export default Login;
+export default Auth;
