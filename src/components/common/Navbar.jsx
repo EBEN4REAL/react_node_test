@@ -16,6 +16,10 @@ const Navbar = () => {
   const taskListRef = useRef(null);
   const [profile, setProfile] = useState({ name: "User", profilePic: "", role: "user" });
 
+  const { user } = useAuth();
+
+  const isAuthenticated = !!user || !!localStorage.getItem("token");
+
   useEffect(() => {
     // Check if user is in admin or user portal
     const isAdminPortal = location.pathname.startsWith("/admin");
@@ -119,17 +123,20 @@ const Navbar = () => {
           </div>
         )}
 
-        <ul className="text-gray-300 flex items-center space-x-4">
-          <li>
-            <Link
-              to="/auth"
-              className="block px-4 py-2 hover:text-white transition"
-              onClick={() => setDropdownOpen(false)}
-            >
-              Login/Signup
-            </Link>
-          </li>
-        </ul>
+        {
+          !isAuthenticated  && (
+            <ul className="text-gray-300 flex items-center space-x-4">
+              <li>
+                <Link
+                  to="/auth"
+                  className="block px-4 py-2 hover:text-white transition"
+                >
+                  Login/Signup
+                </Link>
+              </li>
+            </ul>
+          )
+        }
 
         {/* Profile Button (Hidden on Landing/Login/Signup) */}
         {!hideProfileRoutes.includes(location.pathname) && (
