@@ -15,6 +15,7 @@
  */
 
 import React, { createContext, useState, useContext, useEffect } from "react";
+import { post } from "../Services/hhtpClient";
 
 // Create the authentication context
 const AuthContext = createContext();
@@ -111,8 +112,9 @@ const AuthProvider = ({ children }) => {
    * Handles user logout
    * Clears authentication data and resets state
    */
-  const handleLogout = () => {
+  const handleLogout = async () => {
     // Clear all auth-related data from localStorage
+    await post("/api/auth/logout")
     localStorage.removeItem("token");
     localStorage.removeItem("userRole");
     localStorage.removeItem("userId");
