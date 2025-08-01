@@ -17,6 +17,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { FaCheck, FaEdit, FaSpinner, FaExclamationTriangle, FaCalendarAlt, FaFlag } from 'react-icons/fa';
+import { useAuth } from "../../contexts/AuthContext";
+import { Link, useNavigate } from "react-router-dom";
+
 
 const TaskList = () => {
   // State management with proper initialization
@@ -26,6 +29,10 @@ const TaskList = () => {
   const [error, setError] = useState(null);
   const [editingTask, setEditingTask] = useState(null);
   const [editForm, setEditForm] = useState({ title: '', description: '' });
+
+  const navigate = useNavigate();
+
+  const { isAdmin } = useAuth();
 
   /**
    * Load tasks from localStorage or initialize with mock data
@@ -222,6 +229,11 @@ const TaskList = () => {
       newValue: JSON.stringify(updatedTasks)
     }));
   };
+
+  const handleTasksFilter = () => {
+    if (isAdmin("admin")) navigate("/admin/task-filter");
+    else navigate("/user/task-filter");
+  }
 
   /**
    * Cancel task editing
@@ -430,6 +442,12 @@ const TaskList = () => {
           </li>
         ))}
       </ul>
+      <button 
+          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+          onClick={handleTasksFilter}
+        >
+           Filter task
+        </button>
     </div>
   );
 };
