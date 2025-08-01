@@ -80,11 +80,10 @@ const Login = () => {
         password,
         role
       };
-      console.log("Form Data:", existingUser);
-      const result = await post("/auth/login", existingUser);
+      const result = await post("/api/auth/login", existingUser);
       localStorage.setItem("token", result.data.token);
-      localStorage.setItem("userRole", result.role);
-      localStorage.setItem("userId", result.userId);
+      localStorage.setItem("userRole", result.data.role);
+      localStorage.setItem("userId", result.data.userId);
       localStorage.setItem("email", email);
       if (result) {
         localStorage.setItem(
@@ -92,9 +91,8 @@ const Login = () => {
           JSON.stringify({ ...existingUser, token: result.data.token })
         );
       }
-      console.log("Registration Result => 177", result.data);
       navigate(
-        existingUser.role === "admin" ? "/admin/dashboard" : "/user/dashboard"
+        result.data.role === "admin" ? "/admin/dashboard" : "/user/dashboard"
       );
     } catch (err) {
       console.error("Registration error:", err);
@@ -102,63 +100,6 @@ const Login = () => {
     } finally {
       setLoading(false);
     }
-
-    // try {
-    //   // Simulate network latency for realistic UX
-    //   await new Promise(resolve => setTimeout(resolve, 800));
-
-    //   // Get stored users from localStorage or initialize with default users
-    //   const storedUsers = JSON.parse(localStorage.getItem('users') || JSON.stringify([
-    //     { email: 'admin@example.com', password: 'password123', role: 'admin', userId: 'admin-123' },
-    //     { email: 'user@example.com', password: 'password123', role: 'user', userId: 'user-456' }
-    //   ]));
-
-    //   // Find matching user
-    //   const user = storedUsers.find(u => u.email === email && u.password === password);
-
-    //   if (user) {
-    //     // User found, proceed with login
-    //     const mockToken = `mock-token-${Date.now()}`;
-
-    //     // Store authentication data in localStorage for persistence
-    //     localStorage.setItem("token", mockToken);
-    //     localStorage.setItem("userRole", user.role);
-    //     localStorage.setItem("userId", user.userId);
-    //     localStorage.setItem("email", email);
-
-    //     // Create log entry for admin tracking
-    //     const logData = {
-    //       userId: user.userId,
-    //       username: email,
-    //       role: user.role,
-    //       action: "login",
-    //       loginTime: new Date().toISOString(),
-    //       ipAddress: "127.0.0.1", // In production, this would be captured from the request
-    //       tokenName: mockToken.substring(0, 10) + "..." // Truncated for security
-    //     };
-
-    //     // Store login logs in localStorage for admin view
-    //     const existingLogs = JSON.parse(localStorage.getItem('userLogs') || '[]');
-    //     existingLogs.push(logData);
-    //     localStorage.setItem('userLogs', JSON.stringify(existingLogs));
-
-    //     console.log("User login:", logData);
-
-    //     // Update authentication context
-    //     login(email);
-
-    //     // Navigate to appropriate dashboard or requested page
-    //     navigate(from !== "/" ? from : (user.role === "admin" ? "/admin/dashboard" : "/user/dashboard"));
-    //   } else {
-    //     // Invalid credentials
-    //     setError("Invalid email or password");
-    //   }
-    // } catch (err) {
-    //   console.error("Login error:", err);
-    //   setError("An unexpected error occurred. Please try again.");
-    // } finally {
-    //   setLoading(false);
-    // }
   };
 
   return (
