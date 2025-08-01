@@ -11,6 +11,8 @@ app.use(express.json());
 app.use(cors());
 app.use(bodyParser.json());
 
+require("dotenv").config();
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use("/api", forgotPassRoutes);

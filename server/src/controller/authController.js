@@ -2,8 +2,9 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const UserLog = require("../models/UserLog");
+require("dotenv").config();
 
-const egister = async (req, res) => {
+const register = async (req, res) => {
   try {
     const { fullName, email, password, role } = req.body;
 
