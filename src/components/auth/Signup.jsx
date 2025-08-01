@@ -169,8 +169,7 @@ const Signup = () => {
         role,
         fullName: formData.fullName,
       };
-      console.log("Form Data:", newUser);
-      const result = await post("/auth/register", newUser);
+      const result = await post("/api/auth/register", newUser);
       if (result) {
         localStorage.setItem('taskManagerUser', JSON.stringify({...newUser, token: result.data.token }));
       }
@@ -186,77 +185,6 @@ const Signup = () => {
     } finally {
       setLoading(false);
     }
-    
-    // try {
-    //   // Simulate network latency for realistic UX
-    //   await new Promise(resolve => setTimeout(resolve, 800));
-      
-    //   // Get existing users from localStorage or initialize with default users
-    //   const storedUsers = JSON.parse(localStorage.getItem('users') || JSON.stringify([
-    //     { email: 'admin@example.com', password: 'password123', role: 'admin', userId: 'admin-123' },
-    //     { email: 'user@example.com', password: 'password123', role: 'user', userId: 'user-456' }
-    //   ]));
-      
-    //   // Check if email already exists
-    //   if (storedUsers.some(user => user.email === formData.email)) {
-    //     setError("Email already in use");
-    //     setLoading(false);
-    //     return;
-    //   }
-      
-    //   // Create new user object
-      // const newUser = {
-      //   email: formData.email,
-      //   password: formData.password,
-      //   role: role,
-      //   userId: `user-${Date.now()}`,
-      //   fullName: formData.fullName,
-      //   createdAt: new Date().toISOString()
-      // };
-      
-    //   // Add to stored users
-    //   storedUsers.push(newUser);
-    //   localStorage.setItem('users', JSON.stringify(storedUsers));
-      
-    //   // Generate authentication token
-    //   const mockToken = `mock-token-${Date.now()}`;
-      
-    //   // Store authentication data for automatic login
-      // localStorage.setItem("token", mockToken);
-      // localStorage.setItem("userRole", newUser.role);
-      // localStorage.setItem("userId", newUser.userId);
-      // localStorage.setItem("email", newUser.email);
-      
-    //   // Create log entry for admin tracking
-    //   const logData = {
-    //     userId: newUser.userId,
-    //     username: newUser.email,
-    //     fullName: newUser.fullName,
-    //     role: newUser.role,
-    //     action: "register",
-    //     loginTime: new Date().toISOString(),
-    //     ipAddress: "127.0.0.1", // In production, this would be captured from the request
-    //     tokenName: mockToken.substring(0, 10) + "..." // Truncated for security
-    //   };
-      
-    //   // Store registration log
-    //   const existingLogs = JSON.parse(localStorage.getItem('userLogs') || '[]');
-    //   existingLogs.push(logData);
-    //   localStorage.setItem('userLogs', JSON.stringify(existingLogs));
-      
-    //   console.log("User registration:", logData);
-      
-    //   // Call the context signup method
-    //   signup(formData.email, formData.password);
-      
-    //   // Navigate to the appropriate dashboard
-    //   navigate(newUser.role === "admin" ? "/admin/dashboard" : "/user/dashboard");
-    // } catch (err) {
-    //   console.error("Registration error:", err);
-    //   setError("Failed to create an account. Please try again.");
-    // } finally {
-    //   setLoading(false);
-    // }
   };
 
   return (
