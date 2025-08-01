@@ -5,7 +5,7 @@ import { FaUserCircle, FaTasks } from "react-icons/fa";
 import TaskList from "../tasks/TaskList";
 
 const Navbar = () => {
-  const { logout } = useAuth();
+  const { logout, isAdmin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const hideProfileRoutes = ["/", "/login", "/signup", "/auth"];
@@ -67,6 +67,7 @@ const Navbar = () => {
     }
   };
 
+
   const handleLogoClick = (e) => {
     e.preventDefault();
 
@@ -87,6 +88,11 @@ const Navbar = () => {
         }
       }
     }, 500);
+  };
+
+  const navigateToDashboard = () => {
+    if (isAdmin("admin")) navigate("/admin/dashboard");
+    else navigate("/user/dashboard");
   };
 
   return (
@@ -134,6 +140,16 @@ const Navbar = () => {
                   Login/Signup
                 </Link>
               </li>
+            </ul>
+          )
+        }
+        {
+          isAuthenticated  && (
+            <ul className="text-gray-300 flex items-center space-x-4">
+              <button onClick={navigateToDashboard} className="flex items-center bg-white text-blue-600 font-medium px-4 py-2 rounded-lg shadow-md 
+                         hover:bg-blue-700 hover:text-white transition-all focus:outline-none mr-2">
+                  Dashboard
+              </button>
             </ul>
           )
         }
