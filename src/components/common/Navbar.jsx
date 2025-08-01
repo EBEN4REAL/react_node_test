@@ -90,11 +90,6 @@ const Navbar = () => {
     }, 500);
   };
 
-  const navigateToDashboard = () => {
-    if (isAdmin("admin")) navigate("/admin/dashboard");
-    else navigate("/user/dashboard");
-  };
-
   return (
     <nav className="bg-blue-600 text-white px-5 py-4 flex justify-between items-center shadow-lg">
       {/* Logo with Image & Text */}
@@ -140,16 +135,6 @@ const Navbar = () => {
                   Login/Signup
                 </Link>
               </li>
-            </ul>
-          )
-        }
-        {
-          isAuthenticated  && (
-            <ul className="text-gray-300 flex items-center space-x-4">
-              <button onClick={navigateToDashboard} className="flex items-center bg-white text-blue-600 font-medium px-4 py-2 rounded-lg shadow-md 
-                         hover:bg-blue-700 hover:text-white transition-all focus:outline-none mr-2">
-                  Dashboard
-              </button>
             </ul>
           )
         }
