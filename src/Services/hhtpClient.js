@@ -7,6 +7,15 @@ const api = axios.create({
   },
 });
 
+// ✅ Add interceptor here
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export const get = (url, config) => api.get(url, config);
 export const post = (url, data, config) => api.post(url, data, config);
 export const put = (url, data, config) => api.put(url, data, config);
