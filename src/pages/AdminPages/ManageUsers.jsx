@@ -118,7 +118,7 @@ import Sidebar from "../../components/admin/Sidebar";
 import { get, del } from "../../Services/hhtpClient";
 
 const ManageUsers = () => {
-  const [users, setUsers] = useState([]);
+  const [userLogs, setUserLogs] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
   const [editedData, setEditedData] = useState({
     fullName: "",
@@ -126,20 +126,20 @@ const ManageUsers = () => {
     role: "",
   });
 
-  const fetchUsers = async () => {
+  const fetchUserLogs = async () => {
     try {
-      const result = await get("/admin/users");
+      const result = await get("/admin/userLogs");
       const sortedUsers = result.data.sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        (a, b) => new Date(b.loginTime) - new Date(a.loginTime)
       );
-      setUsers(sortedUsers);
+      console.log("User logs => 147", sortedUsers);
+      setUserLogs(sortedUsers);
     } catch (err) {
       console.error("Registration error:", err);
     }
   };
-
   useEffect(() => {
-    fetchUsers();
+    fetchUserLogs();
   }, []);
 
   const startEditing = (user) => {
@@ -157,15 +157,20 @@ const ManageUsers = () => {
 
   const saveUser = async (email) => {
     try {
-      const res = await fetch(`https://zidio-task-management-backend.onrender.com/admin/users/${email}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(editedData),
-      });
+      const res = await fetch(
+        `https://zidio-task-management-backend.onrender.com/admin/users/${email}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(editedData),
+        }
+      );
 
       if (!res.ok) throw new Error("Failed to update user");
 
-      setUsers(users.map((u) => (u.email === email ? { ...u, ...editedData } : u)));
+      setUserLogs(
+        users.map((u) => (u.email === email ? { ...u, ...editedData } : u))
+      );
       setEditingUser(null);
     } catch (error) {
       console.error("Error updating user:", error);
@@ -175,11 +180,20 @@ const ManageUsers = () => {
   const deleteUser = async (email) => {
     try {
       await del(`/admin/users/${email}`);
-      setUsers(users.filter((u) => u.email !== email));
+      setUserLogs(users.filter((u) => u.email !== email));
     } catch (error) {
       console.error("Error deleting user:", error);
     }
   };
+
+  const deleteLog = async (id) => {
+  try {
+    await del(`/admin/userLogs/${id}`);
+    setUserLogs((prevLogs) => prevLogs.filter((log) => log._id !== id));
+  } catch (err) {
+    console.error("Delete failed", err);
+  }
+};
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -191,78 +205,50 @@ const ManageUsers = () => {
           <table className="w-full border-collapse">
             <thead>
               <tr className="bg-gray-200 text-left">
-                <th className="p-2">ID</th>
-                <th className="p-2">Name</th>
-                <th className="p-2">Email</th>
+                <th className="p-2">#</th>
+                <th className="p-2">User</th>
                 <th className="p-2">Role</th>
-                <th className="p-2">Actions</th>
+                <th className="p-2">JWT Token</th>
+                <th className="p-2">IP Address</th>
+                <th className="p-2">Login Time</th>
+                <th className="p-2">Logout Time</th>
+                <th className="p-2">Action</th>
               </tr>
             </thead>
             <tbody>
-              {users.map((user, index) => (
-                <tr key={user.email} className="border-b">
+              {userLogs.map((log, index) => (
+                <tr key={log._id} className="border-b">
                   <td className="p-2">{index + 1}</td>
+                  <td className="p-2">{log.username}</td>
                   <td className="p-2">
-                    {editingUser === user.email ? (
-                      <input
-                        type="text"
-                        name="fullName"
-                        value={editedData.fullName}
-                        onChange={handleChange}
-                        className="border p-1 rounded"
-                      />
-                    ) : (
-                      user.fullName
-                    )}
+                    {log.role.charAt(0).toUpperCase() + log.role.slice(1)}
                   </td>
-                  <td className="p-2">{user.email}</td>
+                  <td className="p-2 truncate max-w-xs">{log.jwtToken}</td>
+                  <td className="p-2">{log.ipAddress}</td>
                   <td className="p-2">
-                    {editingUser === user.email ? (
-                      <select
-                        name="role"
-                        value={editedData.role}
-                        onChange={handleChange}
-                        className="border p-1 rounded"
-                      >
-                        <option value="Admin">Admin</option>
-                        <option value="User">User</option>
-                      </select>
-                    ) : (
-                      user.role.charAt(0).toUpperCase() + user.role.slice(1)
-                    )}
+                    {new Date(log.loginTime).toLocaleString()}
                   </td>
                   <td className="p-2">
-                    {editingUser === user.email ? (
-                      <button
-                        className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
-                        onClick={() => saveUser(user.email)}
-                      >
-                        Save
-                      </button>
-                    ) : (
-                      <>
-                        <button
-                          className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
-                          onClick={() => startEditing(user)}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="bg-red-500 text-white px-3 py-1 rounded ml-2 hover:bg-red-600"
-                          onClick={() => deleteUser(user.email)}
-                        >
-                          Delete
-                        </button>
-                      </>
-                    )}
+                    {log.logoutTime
+                      ? new Date(log.logoutTime).toLocaleString()
+                      : "—"}
                   </td>
+                  <td className="p-2">
+                    <button
+                      onClick={() => deleteLog(log._id)}
+                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                    >
+                      Delete
+                    </button>
+                  </td>
+
                 </tr>
               ))}
             </tbody>
           </table>
 
-          {users.length === 0 && (
-            <p className="text-gray-500 text-center mt-4">No users found.</p>
+          {userLogs.length === 0 && (
+            <p className="text-gray-500 text-center mt-4">No user logs found.</p>
           )}
         </div>
       </div>

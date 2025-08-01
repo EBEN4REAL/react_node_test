@@ -33,7 +33,7 @@ const UserPage = () => {
     
     // ✅ Assign task to logged-in user
     const newTaskItem = { 
-      id: taskId, 
+      _id: taskId, 
       ...newTask, 
       assignedTo: loggedInUser // ✅ Store assigned user
     };
