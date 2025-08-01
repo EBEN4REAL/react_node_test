@@ -46,11 +46,11 @@
 //       const res = await fetch(`http://localhost:5000/admin/users/${email}`, {
 //         method: "DELETE",
 //       });
-  
+
 //       if (!res.ok) {
 //         throw new Error("Failed to delete user");
 //       }
-  
+
 //       setUsers(user.filter((u) => u.email !== email));
 //     } catch (error) {
 //       console.error("Error deleting user:", error);
@@ -115,25 +115,40 @@
 // export default ManageUsers;
 import React, { useState, useEffect } from "react";
 import Sidebar from "../../components/admin/Sidebar";
+import { get, del } from "../../Services/hhtpClient";
 
 const ManageUsers = () => {
   const [users, setUsers] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
-  const [editedData, setEditedData] = useState({ fullName: "", email: "", role: "" });
+  const [editedData, setEditedData] = useState({
+    fullName: "",
+    email: "",
+    role: "",
+  });
+
+  const fetchUsers = async () => {
+    try {
+      const result = await get("/admin/users");
+      const sortedUsers = result.data.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setUsers(sortedUsers);
+    } catch (err) {
+      console.error("Registration error:", err);
+    }
+  };
 
   useEffect(() => {
-    fetch("https://zidio-task-management-backend.onrender.com/admin/users")
-      .then((res) => res.json())
-      .then((data) => {
-        const sortedUsers = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        setUsers(sortedUsers);
-      })
-      .catch((err) => console.error("Error fetching users:", err));
+    fetchUsers();
   }, []);
 
   const startEditing = (user) => {
     setEditingUser(user.email);
-    setEditedData({ fullName: user.fullName, email: user.email, role: user.role });
+    setEditedData({
+      fullName: user.fullName,
+      email: user.email,
+      role: user.role,
+    });
   };
 
   const handleChange = (e) => {
@@ -159,12 +174,7 @@ const ManageUsers = () => {
 
   const deleteUser = async (email) => {
     try {
-      const res = await fetch(`https://zidio-task-management-backend.onrender.com/admin/users/${email}`, {
-        method: "DELETE",
-      });
-
-      if (!res.ok) throw new Error("Failed to delete user");
-
+      await del(`/admin/users/${email}`);
       setUsers(users.filter((u) => u.email !== email));
     } catch (error) {
       console.error("Error deleting user:", error);
@@ -251,7 +261,9 @@ const ManageUsers = () => {
             </tbody>
           </table>
 
-          {users.length === 0 && <p className="text-gray-500 text-center mt-4">No users found.</p>}
+          {users.length === 0 && (
+            <p className="text-gray-500 text-center mt-4">No users found.</p>
+          )}
         </div>
       </div>
     </div>
