@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { get } from "../../Services/hhtpClient";
 
 const AdminStats = () => {
   const [totalUsers, setTotalUsers] = useState(0);
@@ -6,14 +7,17 @@ const AdminStats = () => {
   const [pendingTasks, setPendingTasks] = useState(0);
   const [completedTasks, setCompletedTasks] = useState(0);
 
-  // Fetch Users from API
+  const fetchUsers = async () => {
+    try {
+      const result = await get("/admin/users");
+      setTotalUsers(result.data.length);
+    } catch (err) {
+      console.error("Registration error:", err);
+    }
+  };
+
   useEffect(() => {
-    fetch("https://zidio-task-management-backend.onrender.com/admin/users") // API URL
-      .then((res) => res.json())
-      .then((data) => {
-        setTotalUsers(data.length); // Count total users
-      })
-      .catch((err) => console.error("Error fetching users:", err));
+    fetchUsers();
   }, []);
 
   // Fetch Tasks from Local Storage
@@ -22,7 +26,9 @@ const AdminStats = () => {
 
     setTotalTasks(storedTasks.length);
     setPendingTasks(storedTasks.filter((task) => task.progress < 100).length);
-    setCompletedTasks(storedTasks.filter((task) => task.progress === 100).length);
+    setCompletedTasks(
+      storedTasks.filter((task) => task.progress === 100).length
+    );
   }, []);
 
   return (
@@ -38,7 +44,6 @@ const AdminStats = () => {
         <h3 className="text-lg font-semibold">Total Tasks</h3>
         <p className="text-3xl font-bold text-purple-600">{totalTasks}</p>
       </div>
-
 
       {/* Completed Tasks */}
       <div className="bg-white p-4 shadow rounded-lg text-center">
