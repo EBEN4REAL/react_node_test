@@ -173,7 +173,6 @@ const Signup = () => {
       if (result) {
         localStorage.setItem('taskManagerUser', JSON.stringify({...newUser, token: result.data.token }));
       }
-      console.log("Registration Result => 177", result.data);
       localStorage.setItem("token", result.data.token);
       localStorage.setItem("userRole", newUser.role);
       localStorage.setItem("userId", newUser.userId);
